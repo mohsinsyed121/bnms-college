@@ -20,24 +20,45 @@
 
   <div class="border hairline rounded-lg bg-white/60 p-8 mb-10 overflow-x-auto">
     <h2 class="font-semibold text-navy text-sm mb-5">Student registrations</h2>
-    {% if registrations %}
+    {% if reg_rows %}
     <table class="registry w-full text-sm text-left">
       <thead>
         <tr>
           <th class="py-2 pr-4">Full name</th><th class="py-2 pr-4">Email</th>
           <th class="py-2 pr-4">Phone</th><th class="py-2 pr-4">DOB</th>
           <th class="py-2 pr-4">Course</th><th class="py-2 pr-4">Submitted</th>
+          <th class="py-2 pr-4">Status</th><th class="py-2 pr-4">Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for r in registrations %}
+        {% for row in reg_rows %}
         <tr>
-          <td class="py-3 pr-4">{{ r.full_name }}</td>
-          <td class="py-3 pr-4">{{ r.email }}</td>
-          <td class="py-3 pr-4">{{ r.phone }}</td>
-          <td class="py-3 pr-4">{{ r.dob|date:"d M Y" }}</td>
-          <td class="py-3 pr-4">{{ r.get_course_display }}</td>
-          <td class="py-3 pr-4 text-ink/50">{{ r.created_at|date:"d M Y, H:i" }}</td>
+          <td class="py-3 pr-4">{{ row.obj.full_name }}</td>
+          <td class="py-3 pr-4">{{ row.obj.email }}</td>
+          <td class="py-3 pr-4">{{ row.obj.phone }}</td>
+          <td class="py-3 pr-4">{{ row.obj.dob|date:"d M Y" }}</td>
+          <td class="py-3 pr-4">{{ row.obj.get_course_display }}</td>
+          <td class="py-3 pr-4 text-ink/50">{{ row.obj.created_at|date:"d M Y, H:i" }}</td>
+          <td class="py-3 pr-4">
+            {% if row.obj.is_reviewed %}
+              <span class="inline-block text-xs font-semibold text-white bg-navy px-2 py-1 rounded">Reviewed</span>
+            {% else %}
+              <span class="inline-block text-xs font-semibold text-ink/50 border border-ink/20 px-2 py-1 rounded">Pending</span>
+            {% endif %}
+          </td>
+          <td class="py-3 pr-4">
+            <div class="flex items-center gap-3">
+              <form method="post" action="{% url 'toggle_registration_reviewed' row.obj.pk %}">
+                {% csrf_token %}
+                <button type="submit" title="Toggle reviewed" class="text-lg leading-none {% if row.obj.is_reviewed %}text-gold{% else %}text-ink/30 hover:text-gold{% endif %} transition">&#10003;</button>
+              </form>
+              <button type="button" onclick="openModal('reg-modal-{{ row.obj.pk }}')" title="Edit" class="text-navy hover:text-gold transition text-sm font-semibold">Edit</button>
+              <form method="post" action="{% url 'delete_registration' row.obj.pk %}" onsubmit="return confirm('Delete this registration? This cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" title="Delete" class="text-red-600 hover:text-red-800 transition text-sm font-semibold">Delete</button>
+              </form>
+            </div>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -49,22 +70,43 @@
 
   <div class="border hairline rounded-lg bg-white/60 p-8 overflow-x-auto">
     <h2 class="font-semibold text-navy text-sm mb-5">Contact inquiries</h2>
-    {% if inquiries %}
+    {% if msg_rows %}
     <table class="registry w-full text-sm text-left">
       <thead>
         <tr>
           <th class="py-2 pr-4">Name</th><th class="py-2 pr-4">Email</th>
           <th class="py-2 pr-4">Subject</th><th class="py-2 pr-4">Message</th><th class="py-2 pr-4">Submitted</th>
+          <th class="py-2 pr-4">Status</th><th class="py-2 pr-4">Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for m in inquiries %}
+        {% for row in msg_rows %}
         <tr>
-          <td class="py-3 pr-4">{{ m.name }}</td>
-          <td class="py-3 pr-4">{{ m.email }}</td>
-          <td class="py-3 pr-4">{{ m.subject }}</td>
-          <td class="py-3 pr-4 max-w-xs truncate" title="{{ m.message }}">{{ m.message }}</td>
-          <td class="py-3 pr-4 text-ink/50">{{ m.submitted_at|date:"d M Y, H:i" }}</td>
+          <td class="py-3 pr-4">{{ row.obj.name }}</td>
+          <td class="py-3 pr-4">{{ row.obj.email }}</td>
+          <td class="py-3 pr-4">{{ row.obj.subject }}</td>
+          <td class="py-3 pr-4 max-w-xs truncate" title="{{ row.obj.message }}">{{ row.obj.message }}</td>
+          <td class="py-3 pr-4 text-ink/50">{{ row.obj.submitted_at|date:"d M Y, H:i" }}</td>
+          <td class="py-3 pr-4">
+            {% if row.obj.is_reviewed %}
+              <span class="inline-block text-xs font-semibold text-white bg-navy px-2 py-1 rounded">Reviewed</span>
+            {% else %}
+              <span class="inline-block text-xs font-semibold text-ink/50 border border-ink/20 px-2 py-1 rounded">Pending</span>
+            {% endif %}
+          </td>
+          <td class="py-3 pr-4">
+            <div class="flex items-center gap-3">
+              <form method="post" action="{% url 'toggle_message_reviewed' row.obj.pk %}">
+                {% csrf_token %}
+                <button type="submit" title="Toggle reviewed" class="text-lg leading-none {% if row.obj.is_reviewed %}text-gold{% else %}text-ink/30 hover:text-gold{% endif %} transition">&#10003;</button>
+              </form>
+              <button type="button" onclick="openModal('msg-modal-{{ row.obj.pk }}')" title="Edit" class="text-navy hover:text-gold transition text-sm font-semibold">Edit</button>
+              <form method="post" action="{% url 'delete_message' row.obj.pk %}" onsubmit="return confirm('Delete this message? This cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" title="Delete" class="text-red-600 hover:text-red-800 transition text-sm font-semibold">Delete</button>
+              </form>
+            </div>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -74,5 +116,90 @@
     {% endif %}
   </div>
 </section>
+
+<!-- Registration edit modals -->
+{% for row in reg_rows %}
+<div id="reg-modal-{{ row.obj.pk }}" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/50" onclick="if(event.target===this) closeModal('reg-modal-{{ row.obj.pk }}')">
+  <div class="bg-paper rounded-lg max-w-lg w-full p-8 border hairline max-h-[90vh] overflow-y-auto">
+    <h3 class="font-serifd text-xl font-semibold text-navy mb-1">Edit registration</h3>
+    <p class="text-xs text-ink/50 mb-6">{{ row.obj.full_name }}</p>
+    <form method="post" action="{% url 'edit_registration' row.obj.pk %}">
+      {% csrf_token %}
+      {% for field in row.form %}
+      <div class="mb-4">
+        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-navy mb-1.5">
+          {{ field.label }}{% if field.field.required %}<span class="text-gold"> *</span>{% endif %}
+        </label>
+        {{ field }}
+        {% for error in field.errors %}
+          <p class="mt-1 text-xs text-red-600 font-medium">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="flex items-center gap-3 mt-6">
+        <button type="submit" class="rounded-md bg-navy text-white font-semibold text-sm px-5 py-2.5 hover:bg-navydeep transition">Save changes</button>
+        <button type="button" onclick="closeModal('reg-modal-{{ row.obj.pk }}')" class="text-sm font-semibold text-ink/60 hover:text-navy transition">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+<!-- Contact message edit modals -->
+{% for row in msg_rows %}
+<div id="msg-modal-{{ row.obj.pk }}" class="hidden fixed inset-0 z-50 items-center justify-center p-4 bg-black/50" onclick="if(event.target===this) closeModal('msg-modal-{{ row.obj.pk }}')">
+  <div class="bg-paper rounded-lg max-w-lg w-full p-8 border hairline max-h-[90vh] overflow-y-auto">
+    <h3 class="font-serifd text-xl font-semibold text-navy mb-1">Edit message</h3>
+    <p class="text-xs text-ink/50 mb-6">From {{ row.obj.name }}</p>
+    <form method="post" action="{% url 'edit_message' row.obj.pk %}">
+      {% csrf_token %}
+      {% for field in row.form %}
+      <div class="mb-4">
+        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-navy mb-1.5">
+          {{ field.label }}{% if field.field.required %}<span class="text-gold"> *</span>{% endif %}
+        </label>
+        {{ field }}
+        {% for error in field.errors %}
+          <p class="mt-1 text-xs text-red-600 font-medium">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <div class="flex items-center gap-3 mt-6">
+        <button type="submit" class="rounded-md bg-navy text-white font-semibold text-sm px-5 py-2.5 hover:bg-navydeep transition">Save changes</button>
+        <button type="button" onclick="closeModal('msg-modal-{{ row.obj.pk }}')" class="text-sm font-semibold text-ink/60 hover:text-navy transition">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+<script>
+  function openModal(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('hidden');
+    el.classList.add('flex');
+  }
+  function closeModal(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('hidden');
+    el.classList.remove('flex');
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('[id^="reg-modal-"], [id^="msg-modal-"]').forEach(function(el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      });
+    }
+  });
+  {% if open_registration_modal %}
+    document.addEventListener('DOMContentLoaded', function() { openModal('reg-modal-{{ open_registration_modal }}'); });
+  {% endif %}
+  {% if open_message_modal %}
+    document.addEventListener('DOMContentLoaded', function() { openModal('msg-modal-{{ open_message_modal }}'); });
+  {% endif %}
+</script>
 
 {% endblock %}
