@@ -1,0 +1,50 @@
+:root {
+  --navy: #1B2A4A;
+  --navy-deep: #131F38;
+  --indigo: #24345C;
+  --gold: #C9A227;
+  --paper: #F7F7F4;
+  --ink: #202433;
+  --muted: #6B7280;
+  --rule: #DAD6C9;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.font-serif-display {
+  font-family: 'Lora', Georgia, serif;
+}
+
+.hairline {
+  border-color: var(--rule);
+}
+
+.gold-rule {
+  height: 3px;
+  width: 56px;
+  background: var(--gold);
+}
+
+/* Focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.stat-num {
+  font-family: 'Lora', Georgia, serif;
+  font-variant-numeric: tabular-nums;
+}
+
+table.registry th {
+  font-weight: 600;
+  color: var(--navy);
+  border-bottom: 1px solid var(--rule);
+}
+table.registry td {
+  border-bottom: 1px solid var(--rule);
+}

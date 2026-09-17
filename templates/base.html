@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}BNMS College{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: '#1B2A4A',
+          navydeep: '#131F38',
+          indigo: '#24345C',
+          gold: '#C9A227',
+          paper: '#F7F7F4',
+          ink: '#202433',
+        },
+        fontFamily: {
+          serifd: ['Lora', 'Georgia', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-paper text-ink font-sans antialiased">
+
+<header class="border-b hairline bg-paper/95 backdrop-blur sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex items-center justify-between h-20">
+      <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-navy text-navy font-serifd font-semibold text-sm">BC</span>
+        <span class="font-serifd text-xl font-semibold text-navy leading-tight">BNMS College</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-9 text-sm font-medium text-ink/80">
+        <a href="{% url 'home' %}" class="hover:text-navy transition {% if request.resolver_match.url_name == 'home' %}text-navy{% endif %}">Home</a>
+        <a href="{% url 'about' %}" class="hover:text-navy transition {% if request.resolver_match.url_name == 'about' %}text-navy{% endif %}">About</a>
+        <a href="{% url 'register' %}" class="hover:text-navy transition {% if request.resolver_match.url_name == 'register' %}text-navy{% endif %}">Admissions</a>
+        <a href="{% url 'contact' %}" class="hover:text-navy transition {% if request.resolver_match.url_name == 'contact' %}text-navy{% endif %}">Contact</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        {% if user.is_authenticated %}
+          {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_dashboard' %}" class="hidden sm:inline text-sm font-medium text-navy hover:text-gold transition">Admin Dashboard</a>
+          {% else %}
+            <a href="{% url 'student_dashboard' %}" class="hidden sm:inline text-sm font-medium text-navy hover:text-gold transition">My Dashboard</a>
+          {% endif %}
+          <a href="{% url 'logout' %}" class="text-sm font-semibold text-white bg-navy hover:bg-navydeep px-4 py-2 rounded-md transition">Log out</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="text-sm font-semibold text-white bg-navy hover:bg-navydeep px-4 py-2 rounded-md transition">Portal Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% if messages %}
+<div class="max-w-6xl mx-auto px-6 pt-6">
+  {% for message in messages %}
+  <div class="mb-3 rounded-md border-l-4 {% if message.tags == 'success' %}border-gold bg-gold/10 text-navydeep{% elif message.tags == 'error' %}border-red-500 bg-red-50 text-red-800{% else %}border-navy bg-navy/5 text-navy{% endif %} px-4 py-3 text-sm font-medium">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="mt-24 border-t hairline bg-navy text-white/80">
+  <div class="max-w-6xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold text-gold font-serifd font-semibold text-sm">BC</span>
+        <span class="font-serifd text-lg font-semibold text-white">BNMS College</span>
+      </div>
+      <p class="text-sm text-white/60 max-w-sm leading-relaxed">A demo institution built to showcase a complete Django admissions and information platform — from public pages to role-based dashboards.</p>
+    </div>
+    <div>
+      <h3 class="text-white font-semibold text-sm mb-4">Explore</h3>
+      <ul class="space-y-2 text-sm text-white/60">
+        <li><a href="{% url 'home' %}" class="hover:text-gold transition">Home</a></li>
+        <li><a href="{% url 'about' %}" class="hover:text-gold transition">About Us</a></li>
+        <li><a href="{% url 'register' %}" class="hover:text-gold transition">Admissions</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-gold transition">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-white font-semibold text-sm mb-4">Reach us</h3>
+      <ul class="space-y-2 text-sm text-white/60">
+        <li>123 Scholars Avenue, Lucknow, UP</li>
+        <li>admissions@bnmscollege.edu</li>
+        <li>+91 522 100 2000</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10 py-5 text-center text-xs text-white/40">
+    &copy; {% now "Y" %} BNMS College — Demo application for educational purposes.
+  </div>
+</footer>
+
+</body>
+</html>

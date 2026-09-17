@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard — BNMS College{% endblock %}
+{% block content %}
+
+<section class="max-w-4xl mx-auto px-6 py-16">
+  <div class="gold-rule mb-6"></div>
+  <h1 class="font-serifd text-3xl font-semibold text-navy">Welcome, {{ user.get_username }}</h1>
+  <p class="mt-3 text-sm text-ink/60">This is your student dashboard.</p>
+
+  <div class="mt-10 border hairline rounded-lg bg-white/60 p-8">
+    <h2 class="font-semibold text-navy text-sm mb-5">Your registration record{{ my_records.count|pluralize }}</h2>
+    {% if my_records %}
+      <table class="registry w-full text-sm text-left">
+        <thead>
+          <tr><th class="py-2 pr-4">Full name</th><th class="py-2 pr-4">Course</th><th class="py-2 pr-4">Phone</th><th class="py-2 pr-4">Submitted</th></tr>
+        </thead>
+        <tbody>
+          {% for r in my_records %}
+          <tr>
+            <td class="py-3 pr-4">{{ r.full_name }}</td>
+            <td class="py-3 pr-4">{{ r.get_course_display }}</td>
+            <td class="py-3 pr-4">{{ r.phone }}</td>
+            <td class="py-3 pr-4 text-ink/50">{{ r.created_at|date:"d M Y" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-sm text-ink/50">No registration found linked to your account email ({{ user.email|default:"no email set" }}). If you've already applied with a different email, contact admissions.</p>
+      <a href="{% url 'register' %}" class="mt-4 inline-block text-sm font-semibold text-navy hover:text-gold transition">Submit a new application &rarr;</a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

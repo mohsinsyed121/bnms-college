@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}BNMS College — Home{% endblock %}
+{% block content %}
+
+<section class="max-w-6xl mx-auto px-6 pt-16 pb-20 grid md:grid-cols-5 gap-12 items-start">
+  <div class="md:col-span-3">
+    <div class="gold-rule mb-6"></div>
+    <h1 class="font-serifd text-4xl sm:text-5xl font-semibold text-navy leading-[1.15]">
+      Where disciplined study<br>meets independent thought.
+    </h1>
+    <p class="mt-6 text-base text-ink/70 leading-relaxed max-w-lg">
+      BNMS College has trained scientists, engineers, managers and civil servants for over four decades. We keep our classes small, our faculty accessible, and our expectations high.
+    </p>
+    <div class="mt-9 flex flex-wrap items-center gap-4">
+      <a href="{% url 'register' %}" class="inline-flex items-center justify-center rounded-md bg-navy text-white font-semibold text-sm px-6 py-3 hover:bg-navydeep transition">
+        Start your application
+      </a>
+      <a href="{% url 'about' %}" class="inline-flex items-center justify-center rounded-md border border-navy/30 text-navy font-semibold text-sm px-6 py-3 hover:border-navy transition">
+        Learn about the college
+      </a>
+    </div>
+  </div>
+
+  <div class="md:col-span-2 border hairline rounded-lg p-8 bg-white/60">
+    <p class="text-xs font-medium uppercase tracking-wide text-ink/40 mb-6">Academic year 2026–27</p>
+    <div class="space-y-6">
+      <div class="flex items-baseline gap-3">
+        <span class="stat-num text-3xl font-semibold text-navy">6</span>
+        <span class="text-sm text-ink/60">undergraduate schools</span>
+      </div>
+      <div class="flex items-baseline gap-3">
+        <span class="stat-num text-3xl font-semibold text-navy">1,800+</span>
+        <span class="text-sm text-ink/60">students enrolled</span>
+      </div>
+      <div class="flex items-baseline gap-3">
+        <span class="stat-num text-3xl font-semibold text-navy">95%</span>
+        <span class="text-sm text-ink/60">graduate placement rate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-t hairline bg-white/40">
+  <div class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="font-serifd text-2xl font-semibold text-navy mb-10">Why students choose BNMS</h2>
+    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
+      {% for item in highlights %}
+      <div class="border-t-2 border-gold pt-4">
+        <h3 class="font-semibold text-navy text-sm mb-2">{{ item.title }}</h3>
+        <p class="text-sm text-ink/60 leading-relaxed">{{ item.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-6 py-20">
+  <div class="grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <div class="gold-rule mb-6"></div>
+      <h2 class="font-serifd text-3xl font-semibold text-navy leading-tight">Admissions are open for the coming term.</h2>
+      <p class="mt-4 text-sm text-ink/60 leading-relaxed max-w-md">
+        Fill in the registration form with your details and preferred course. Our admissions office reviews every application within five working days.
+      </p>
+    </div>
+    <div class="border hairline rounded-lg p-8">
+      <ol class="space-y-5 text-sm text-ink/70">
+        <li class="flex gap-4"><span class="font-serifd text-navy font-semibold">1</span><span>Submit the online registration form with your basic details.</span></li>
+        <li class="flex gap-4"><span class="font-serifd text-navy font-semibold">2</span><span>Our admissions office reviews your course preference.</span></li>
+        <li class="flex gap-4"><span class="font-serifd text-navy font-semibold">3</span><span>You receive an offer and next steps by email.</span></li>
+      </ol>
+      <a href="{% url 'register' %}" class="mt-7 inline-block text-sm font-semibold text-navy hover:text-gold transition">Begin your application</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
