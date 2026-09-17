@@ -24,6 +24,7 @@ class StudentRegistration(models.Model):
     dob = models.DateField(verbose_name="Date of Birth")
     course = models.CharField(max_length=10, choices=COURSE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']
